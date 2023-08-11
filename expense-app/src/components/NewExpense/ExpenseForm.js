@@ -21,10 +21,12 @@ const ExpenseForm = (props) => {
   const submitHandler = (event) => {
     event.preventDefault();
 
+    // + converts amount to a number.
+    // Adding a timestamp to the date should put this into the local timezone (https://www.bockensm.com/2021/03/13/javascript-dates-off-by-one/).
     const expenseData = {
       title: enteredTitle,
       amount: +enteredAmount,
-      date: new Date(enteredDate),
+      date: new Date(enteredDate+"T00:00:00"),
     };
 
     props.onSaveExpenseData(expenseData);
