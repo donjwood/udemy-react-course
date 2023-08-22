@@ -1,51 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Card from "../UI/Card";
 
 import styles from "./AddUser.module.css";
 import Button from "../UI/Button";
 import ErrorModal from "../UI/ErrorModal";
 
-const initialInput = {
-  username: "",
-  age: "",
-};
-
 const AddUser = (props) => {
-  const [userInput, setUserInput] = useState(initialInput);
-  //const [hasError, setHasError] = useState(false);
-  //const [errorMessage, setErrorMessage] = useState("");
-  const [error, setError] = useState();
-  
+  const nameInputRef = useRef();
+  const ageInputRef = useRef();
 
-  const onChangeInputHandler = (inputField, value) => {
-    setUserInput((prevUserInput) => {
-      return {
-        ...prevUserInput,
-        [inputField]: value,
-      };
-    });
-  };
+  const [error, setError] = useState();
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
+    const enteredName = nameInputRef.current.value;
+    const enteredAge = ageInputRef.current.value;
+
     // Field validation
-    if (userInput.username.trim().length === 0 || userInput.age.trim().length === 0) {
+    if (enteredName.trim().length === 0 || enteredName.trim().length === 0) {
       setError({
-        header: 'Invalid input',
-        message: 'Please enter a valid name and age (non-empty values).'
+        header: "Invalid input",
+        message: "Please enter a valid name and age (non-empty values).",
       });
       return;
-    } else if (+userInput.age <= 0) {
+    } else if (+enteredAge <= 0) {
       setError({
-        header: 'Invalid age',
-        message: 'Please enter a valid age (> 0).'
+        header: "Invalid age",
+        message: "Please enter a valid age (> 0).",
       });
       return;
     }
 
-    props.onAddUser(userInput);
-    setUserInput(initialInput);
+    props.onAddUser({ username: enteredName, age: enteredAge });
+
+    nameInputRef.current.value = '';
+    ageInputRef.current.value = '';
+
   };
 
   const onDismissErrorHandler = () => {
@@ -53,27 +44,23 @@ const AddUser = (props) => {
   };
 
   return (
-    <Card className={styles["input"]}>
-      <form onSubmit={onSubmitHandler}>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          value={userInput.username}
-          onChange={(event) => {
-            onChangeInputHandler("username", event.target.value);
-          }}
-        />
-        <label htmlFor="age">Age (Years)</label>
-        <input
-          id="age"
-          type="number"
-          value={userInput.age}
-          onChange={(event) => {
-            onChangeInputHandler("age", event.target.value);
-          }}
-        />
-        <Button type="submit">Add User</Button>
-      </form>
+    <React.Fragment>
+      <Card className={styles["input"]}>
+        <form onSubmit={onSubmitHandler}>
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            ref={nameInputRef}
+          />
+          <label htmlFor="age">Age (Years)</label>
+          <input
+            id="age"
+            type="number"
+            ref={ageInputRef}
+          />
+          <Button type="submit">Add User</Button>
+        </form>
+      </Card>
       {error && (
         <ErrorModal
           headerText={error.header}
@@ -82,7 +69,7 @@ const AddUser = (props) => {
           onDismiss={onDismissErrorHandler}
         />
       )}
-    </Card>
+    </React.Fragment>
   );
 };
 
