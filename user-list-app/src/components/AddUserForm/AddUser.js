@@ -12,8 +12,10 @@ const initialInput = {
 
 const AddUser = (props) => {
   const [userInput, setUserInput] = useState(initialInput);
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  //const [hasError, setHasError] = useState(false);
+  //const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState();
+  
 
   const onChangeInputHandler = (inputField, value) => {
     setUserInput((prevUserInput) => {
@@ -28,13 +30,17 @@ const AddUser = (props) => {
     event.preventDefault();
 
     // Field validation
-    if (userInput.username === "" || userInput.age === "") {
-      setHasError(true);
-      setErrorMessage("Please enter a valid name and age (non-empty values).");
+    if (userInput.username.trim().length === 0 || userInput.age.trim().length === 0) {
+      setError({
+        header: 'Invalid input',
+        message: 'Please enter a valid name and age (non-empty values).'
+      });
       return;
     } else if (+userInput.age <= 0) {
-      setHasError(true);
-      setErrorMessage("Please enter a valid age (>0).");
+      setError({
+        header: 'Invalid age',
+        message: 'Please enter a valid age (> 0).'
+      });
       return;
     }
 
@@ -43,22 +49,23 @@ const AddUser = (props) => {
   };
 
   const onDismissErrorHandler = () => {
-    setHasError(false);
-    setErrorMessage("");
+    setError(null);
   };
 
   return (
-    <Card>
-      <form onSubmit={onSubmitHandler} className={styles["input"]}>
-        <label>Username</label>
+    <Card className={styles["input"]}>
+      <form onSubmit={onSubmitHandler}>
+        <label htmlFor="username">Username</label>
         <input
+          id="username"
           value={userInput.username}
           onChange={(event) => {
             onChangeInputHandler("username", event.target.value);
           }}
         />
-        <label>Age (Years)</label>
+        <label htmlFor="age">Age (Years)</label>
         <input
+          id="age"
           type="number"
           value={userInput.age}
           onChange={(event) => {
@@ -67,10 +74,10 @@ const AddUser = (props) => {
         />
         <Button type="submit">Add User</Button>
       </form>
-      {hasError && (
+      {error && (
         <ErrorModal
-          headerText="Invalid Input"
-          contentText={errorMessage}
+          headerText={error.header}
+          contentText={error.message}
           dismissButtonText="Okay"
           onDismiss={onDismissErrorHandler}
         />

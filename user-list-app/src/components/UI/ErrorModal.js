@@ -12,7 +12,8 @@ const ErrorModal = (props) => {
   }
 
   return (
-    <div className={styles["backdrop"]}>
+    <div>
+      <div className={styles["backdrop"]} onClick={onClickDismissButtonHandler} />
       <Card className={styles["modal"]}>
         <div className={styles["header"]}>
           <h2>{props.headerText}</h2>
