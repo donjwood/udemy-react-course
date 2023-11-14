@@ -1,11 +1,13 @@
-import { Fragment } from "react";
+import PageContent from '../components/PageContent'
 
 function HomePage() {
  
   return (
-    <Fragment>
-      <h1>My Home Page</h1>
-    </Fragment>
+    <>
+      <PageContent title="Welcome!">
+        <p>Browse all our amazing events!</p>
+      </PageContent>'
+    </>
   );
 }
 
