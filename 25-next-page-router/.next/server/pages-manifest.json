@@ -2,7 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/news": "pages/news.js",
   "/": "pages/index.js",
-  "/news/something-important": "pages/news/something-important.js"
+  "/news/[newsId]": "pages/news/[newsId].js",
+  "/news": "pages/news.js"
 }
